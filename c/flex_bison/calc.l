@@ -3,14 +3,14 @@
 %}
 
 %%
-"+"      { return ADD; }
-"-"      { return SUB; }
-"*"      { return MUL; }
-"/"      { return DIV; }
-"|"      { return ABS; }
-"!"      { return FACT; }
-"("      { return OPEN_PAREN; }
-")"      { return CLOSE_PAREN; }
+"+" |
+"-" |
+"*" |
+"/" |
+"|" |
+"!" |
+"(" |
+")" { return yytext[0]; }
 [0-9]+   { yylval = atoi(yytext); return NUMBER; }
 [ \t]+   { /* nada */ }
 "//".*   { /* nada */ }

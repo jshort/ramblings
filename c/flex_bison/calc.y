@@ -2,47 +2,54 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#define YYSTYPE long long
+
 void yyerror(const char *s);
-int factorial(int n)
-{
-  if (n == 1) return 1;
-  return n * factorial(n-1);
-}
+long long factorial(long long n);
+int yydebug;
 %}
 
 /* Declare tokens */
 %token NUMBER
-%token ADD SUB MUL DIV ABS FACT
-%token OPEN_PAREN CLOSE_PAREN
 %token EOL
 
 %%
 calclist:
-  | calclist exp EOL { printf(" = %d\n", $2); }
+  | calclist expr EOL { printf(" = %lld\n", $2); }
   | calclist EOL { /* nada */ }
   ;
-exp:
+expr:
     term
-  | exp ADD term { $$ = $1 + $3; }
-  | exp SUB term { $$ = $1 - $3; }
+  | expr '+' term { $$ = $1 + $3; }
+  | expr '-' term { $$ = $1 - $3; }
   ;
 term:
-    factor
-  | term MUL factor { $$ = $1 * $3; }
-  | term DIV factor { $$ = $1 / $3; }
+    lfactor
+  | term '*' lfactor { $$ = $1 * $3; }
+  | term '/' lfactor { $$ = $1 / $3; }
+  ;
+lfactor:
+    '|' lfactor { $$ = $2 > 0 ? $2 : -$2; }
+  | '-' lfactor { $$ = 0 - $2; }
+  | factor
   ;
 factor:
-    ABS factor { $$ = $2 > 0 ? $2 : -$2; }
-  | SUB factor { $$ = 0 - $2; }
-  | OPEN_PAREN exp CLOSE_PAREN { $$ = $2; }
-  | OPEN_PAREN exp CLOSE_PAREN FACT { $$ = factorial($2); }
-  | NUMBER FACT { $$ = factorial($1); }
+    '(' expr ')' { $$ = $2; }
+  | factor '!' { $$ = factorial((long long) $1); }
   | NUMBER
   ;
 %%
 int main(int argc, char **argv)
 {
+  // Enable bison debug if -t is passed
+  /* yydebug = 1; */
   yyparse();
+}
+
+long long factorial(long long n)
+{
+  if (n == 0) return 1LL;
+  return n * factorial(n - 1LL);
 }
 
 void yyerror(const char *s)

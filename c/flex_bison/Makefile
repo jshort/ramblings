@@ -6,5 +6,5 @@ calc.yy.c : calc.l calc.tab.h
 	/usr/local/opt/flex/bin/flex -o calc.yy.c calc.l
 .PHONY : clean
 clean :
-	rm calc calc.tab.* calc.yy.*
+	-@rm calc calc.tab.* calc.yy.* calc.output 2> /dev/null || true
 
