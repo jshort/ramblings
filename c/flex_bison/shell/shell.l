@@ -23,6 +23,6 @@ static int mygetinput(char *buf, int size) {
 %%
 ls.*         system(yytext);
 date.*       system(yytext);
-.+           fprintf(stderr, "Error: unknown comand\n");
+.+           fprintf(stderr, "Error: Unknown command\n");
 [ \t\n]+     {}
 %%

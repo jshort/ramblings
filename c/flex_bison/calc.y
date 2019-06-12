@@ -5,7 +5,9 @@
 #define YYSTYPE long long
 
 void yyerror(const char *s);
+
 long long factorial(long long n);
+
 int yydebug;
 %}
 
@@ -39,20 +41,24 @@ factor:
   | NUMBER
   ;
 %%
-int main(int argc, char **argv)
+
+int
+main(int argc, char **argv)
 {
   // Enable bison debug if -t is passed
   /* yydebug = 1; */
   yyparse();
 }
 
-long long factorial(long long n)
+long long
+factorial(long long n)
 {
   if (n == 0) return 1LL;
   return n * factorial(n - 1LL);
 }
 
-void yyerror(const char *s)
+void
+yyerror(const char *s)
 {
   fprintf(stderr, "Parse error: %s\n", s);
   exit(1);
